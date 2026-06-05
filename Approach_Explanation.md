@@ -41,13 +41,13 @@ In an attempt to push our score from 91 up to the 95-98 range, we fundamentally 
 3. **K-Fold OOF Blending**: Instead of training on 100% of the data, we used 5-Fold Cross Validation. We trained 5 models per algorithm, each predicting on the test set, and averaged them to prevent overfitting.
 
 ### The Result:
-- **Training R² Score**: Jumped massively to **~96**.
+- **Training R² Score**: Dropped from **~96% down to ~90%**.
 - **Leaderboard Score**: Dropped drastically from **92 down to 86**.
 
 ### Disadvantages & Analysis (Why it failed):
-The advanced approach caused massive **overfitting**. 
-- When we decoded `geohash` into continuous latitude and longitude, the highly complex gradient boosting trees split too aggressively on those exact coordinates. Instead of learning general spatial patterns, the models essentially memorized the exact locations of the training data. 
-- In contrast, our baseline approach (treating `geohash` as a raw categorical string) acted as a natural **regularizer**. CatBoost and LightGBM bin these string categories, which prevents the trees from overfitting to microscopic geographic coordinate boundaries, leading to much better generalization on unseen test data.
+The advanced approach failed to capture the true underlying patterns of the data.
+- When we decoded `geohash` into continuous latitude and longitude, the gradient boosting trees struggled to create effective splits. The continuous coordinates created too much noise, preventing the models from learning clear spatial boundaries, which caused performance to drop on both the training and test sets.
+- In contrast, our baseline approach (treating `geohash` as a raw categorical string) is extremely effective because CatBoost and LightGBM naturally group and bin categorical strings. This allows the models to cleanly separate distinct geographic regions, leading to a much higher Training R² (96%) and a strong generalization on the test set (92).
 
 ---
 

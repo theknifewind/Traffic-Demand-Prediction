@@ -11,7 +11,7 @@ My final pipeline involves an ensemble of three models: **LightGBM**, **CatBoost
 During development, I experimented with different ways to handle geospatial data:
 - **The Baseline:** Treating geographic hashes (`geohash`) as raw categorical strings. This allowed CatBoost and LightGBM's native categorical handling to naturally bin the locations.
 - **The Experiment:** Decoding the `geohash` into continuous `latitude` and `longitude` coordinates using `pygeohash`, alongside applying cyclical sine/cosine transformations to the time features.
-- **The Learning:** The advanced continuous coordinate approach led to massive overfitting on the training data (R² ~96) but poor generalization on unseen data. I learned that for this specific dataset, keeping the geohashes as categorical strings acted as a powerful natural regularizer, preventing the complex trees from memorizing exact coordinates. 
+- **The Learning:** The advanced continuous coordinate approach performed worse across the board, dropping the training R² to 90% and the leaderboard score to 86. I learned that for this specific dataset, keeping the geohashes as categorical strings is much more effective because the models can naturally group distinct geographic regions, whereas continuous coordinates introduced too much noise. The baseline model achieved a strong 96% R² and 92 on the leaderboard.
 
 I ultimately rolled back to the robust baseline approach, optimized hyperparameters using **Optuna**, and blended the predictions of all three models to achieve a strong and stable R² score.
 
