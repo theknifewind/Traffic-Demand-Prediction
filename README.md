@@ -22,7 +22,6 @@ I ultimately rolled back to the robust baseline approach, optimized hyperparamet
 
 ## Repository Structure
 - `Traffic_Demand_Prediction.ipynb`: The main Jupyter Notebook containing the data preprocessing, Optuna tuning, model training, and ensembling logic.
-- `solve.py`: The Python script used to dynamically generate and structure the notebook.
 - `Approach_Explanation.md`: A detailed, step-by-step breakdown of the pipeline, feature engineering decisions, and failed experiments.
 
 ## Running the Code

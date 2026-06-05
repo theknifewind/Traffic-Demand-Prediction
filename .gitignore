@@ -1,0 +1,25 @@
+# Datasets
+dataset/
+*.csv
+
+# Output / Generated files
+submission_source_files.zip
+*.zip
+
+# Agent Scripts
+solve.py
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+env/
+.env/
+.venv/
+myenv/
