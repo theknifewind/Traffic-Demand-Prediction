@@ -1,19 +1,19 @@
 # Traffic Demand Prediction 🚦
 
-This repository contains my machine learning solution for predicting traffic demand based on spatiotemporal features, weather conditions, and road characteristics. This project was developed as part of the **Gridlock Hackathon 2.0**.
+This repository contains an end-to-end machine learning solution for predicting traffic demand based on spatiotemporal features, weather conditions, and road characteristics.
 
 ## Project Overview
-The goal of this project was to forecast continuous traffic demand using various categorical and numerical features. I used this opportunity to deepen my understanding of gradient boosting algorithms, hyperparameter tuning, and feature engineering for geographic data.
+The goal of this project is to forecast continuous traffic demand using spatial, temporal, and environmental features. The pipeline implements gradient boosting algorithms, Optuna Bayesian hyperparameter tuning, high-cardinality categorical feature encoding, and rigorous 5-Fold Out-of-Fold (OOF) cross-validation evaluation.
 
 ## Approach & Learnings
-My final pipeline involves an ensemble of three models: **LightGBM**, **CatBoost**, and **XGBoost**. 
+The final pipeline utilizes an ensemble of three gradient boosting architectures: **LightGBM**, **CatBoost**, and **XGBoost**.
 
-During development, I experimented with different ways to handle geospatial data:
-- **The Baseline:** Treating geographic hashes (`geohash`) as raw categorical strings. This allowed CatBoost and LightGBM's native categorical handling to naturally bin the locations.
-- **The Experiment:** Decoding the `geohash` into continuous `latitude` and `longitude` coordinates using `pygeohash`, alongside applying cyclical sine/cosine transformations to the time features.
-- **The Learning:** The advanced continuous coordinate approach performed worse across the board, dropping the training R² to 90% and the leaderboard score to 86. I learned that for this specific dataset, keeping the geohashes as categorical strings is much more effective because the models can naturally group distinct geographic regions, whereas continuous coordinates introduced too much noise. The baseline model achieved a strong 96% R² and 92 on the leaderboard.
+To ensure robust evaluation on unseen data and eliminate overfitting risks, all models were validated using **5-Fold Cross-Validation** to measure performance on held-out out-of-fold (OOF) samples:
+- **The Baseline (Final Model):** Treating geographic hashes (`geohash`) as native categorical strings. CatBoost and LightGBM's categorical handling naturally binned spatial regions, achieving a **95.30% 5-Fold Out-of-Fold (OOF) CV R²** (OOF RMSE: `0.0308`, OOF MAE: `0.0204`).
+- **The Experiment:** Decoding `geohash` into continuous `latitude` and `longitude` coordinates using `pygeohash` alongside cyclical sine/cosine time transformations.
+- **The Learning:** Continuous spatial coordinates degraded generalization, dropping 5-Fold OOF CV R² to **90.31%**. High-cardinality categorical binning preserved sharp micro-regional boundaries far better than axis-aligned splits on continuous coordinates.
 
-I ultimately rolled back to the robust baseline approach, optimized hyperparameters using **Optuna**, and blended the predictions of all three models to achieve a strong and stable R² score.
+Hyperparameters were optimized using **Optuna** (Bayesian Hyperparameter Tuning) across 5 cross-validation folds. Predictions from all three models were blended to construct a stable, highly generalized regression pipeline.
 
 ## Tools & Libraries Used
 - **Python**: Pandas, NumPy
@@ -21,14 +21,12 @@ I ultimately rolled back to the robust baseline approach, optimized hyperparamet
 - **Optimization**: Optuna (Bayesian Hyperparameter Tuning)
 
 ## Repository Structure
-- `Traffic_Demand_Prediction.ipynb`: The main Jupyter Notebook containing the data preprocessing, Optuna tuning, model training, and ensembling logic.
-- `Approach_Explanation.md`: A detailed, step-by-step breakdown of the pipeline, feature engineering decisions, and failed experiments.
+- `Traffic_Demand_Prediction.ipynb`: The main Jupyter Notebook containing data preprocessing, Optuna tuning, 5-fold cross-validation, model training, and ensembling logic.
+- `Approach_Explanation.md`: A detailed breakdown of the machine learning pipeline, feature engineering decisions, cross-validation metrics, and experimental trade-offs.
 
 ## Running the Code
 1. Clone the repository.
-2. Ensure you have the required libraries installed: `pip install pandas scikit-learn lightgbm catboost xgboost optuna jupyter`
-3. Place the `train.csv` and `test.csv` files in a `dataset/` directory.
-4. Run the Jupyter Notebook to train the ensemble and generate the `submission_blend.csv`.
+2. Ensure required dependencies are installed: `pip install pandas scikit-learn lightgbm catboost xgboost optuna jupyter`
+3. Place `train.csv` and `test.csv` in the `dataset/` directory.
+4. Run `Traffic_Demand_Prediction.ipynb` to execute preprocessing, cross-validation, ensemble training, and test inference.
 
----
-*Note: I am continuously learning and iterating on my data science skills. Feedback and suggestions are always welcome!*

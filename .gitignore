@@ -23,3 +23,7 @@ env/
 .env/
 .venv/
 myenv/
+
+# CatBoost log info
+catboost_info/
+
