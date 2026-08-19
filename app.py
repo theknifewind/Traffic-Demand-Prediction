@@ -58,15 +58,11 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 @st.cache_resource
-def _read_pickle(path, mtime):
-    with open(path, 'rb') as f:
-        return pickle.load(f)
-
 def load_model_artifacts():
     path = 'models/model_artifacts.pkl'
     if os.path.exists(path):
-        mtime = os.path.getmtime(path)
-        return _read_pickle(path, mtime)
+        with open(path, 'rb') as f:
+            return pickle.load(f)
     return None
 
 @st.cache_data
